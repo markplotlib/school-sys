@@ -3,6 +3,12 @@ import sqlite3
 import os
 
 dbfile = 'school-sys.db'
+if os.path.exists(dbfile):
+    key = input('Overwrite school-sys.db? (Y/n): ')
+    if key != 'n':
+        os.remove(dbfile)
+    else:
+        dbfile = 'copy-' + dbfile
 
 con = sqlite3.connect(dbfile)
 
