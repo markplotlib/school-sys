@@ -2,7 +2,10 @@
 import sqlite3
 import os
 
+# filenames
 dbfile = 'school-sys.db'
+sql_filename = 'treehouse.sql'
+
 if os.path.exists(dbfile):
     key = input('Overwrite school-sys.db? (Y/n): ')
     if key != 'n':
@@ -15,23 +18,12 @@ con = sqlite3.connect(dbfile)
 # create a cursor object
 cur = con.cursor()
 
-# DDL
-ddl = '''CREATE TABLE ppl (
-    ID INT PRIMARY KEY,
-    FIRST_NAME TEXT,
-    LAST_NAME TEXT
-);'''
+# DDL & insertions
+sql_file = open(sql_filename)
+sql_as_string = sql_file.read()
 
-cur.execute(ddl)
-
-# DML
-dml = "INSERT INTO ppl VALUES(101,'Jo','Jo')"
-cur.execute(dml)
-
-# query
-qry = "SELECT * FROM ppl"
-y = cur.execute(qry)
-print(y.fetchall())
+# execution takes minutes to run
+cur.executescript(sql_as_string)
 
 con.commit()
 con.close()
