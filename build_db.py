@@ -8,11 +8,14 @@ dbfile = 'school-sys.db'
 sql_filename = 'treehouse.sql'
 
 if os.path.exists(dbfile):
-    key = input('Overwrite school-sys.db? (Y/n): ')
-    if key != 'n':
+    key = input('Database file exists. Copy? Overwrite? Abort? (c/o/A): ')
+    if key.lower() == 'c':
+        dbfile = 'copy-' + dbfile
+    elif key.lower() == 'o':
         os.remove(dbfile)
     else:
-        dbfile = 'copy-' + dbfile
+        print('Program aborted.')
+        quit()
 
 con = sqlite3.connect(dbfile)
 
