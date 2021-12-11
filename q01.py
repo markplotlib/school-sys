@@ -12,14 +12,16 @@ q = '''
 WITH busy AS
 (
     SELECT  COUNT(*) AS load
-            , t.ID || ': ' || t.LAST_NAME || ', ' || t.FIRST_NAME
+            , t.ID || ': ' || t.LAST_NAME || ', ' || t.FIRST_NAME AS name
     FROM    TEACHERS AS t
     JOIN    CLASSES AS c
         ON  t.ID = c.TEACHER_ID
     GROUP BY t.ID
-    HAVING load = 7
 )
-SELECT * FROM busy
+SELECT name FROM busy
+WHERE load = (
+    SELECT MAX(load) FROM busy
+)
 '''
 ans = cur.execute(q).fetchall()
 print('count, query:', len(ans))
