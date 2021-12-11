@@ -1,0 +1,49 @@
+STUDENTS (
+           ID INT PRIMARY KEY,
+           FIRST_NAME TEXT,
+           LAST_NAME TEXT,
+           GRADE INTEGER
+       );
+
+TEACHERS (
+           ID INT PRIMARY KEY,
+           FIRST_NAME TEXT,
+           LAST_NAME TEXT
+       );
+
+SUBJECTS (
+           ID INT PRIMARY KEY,
+           NAME TEXT,
+           GRADE INT,
+           DESCRIPTION TEXT
+       );
+
+SCHEDULE (
+           CLASS_ID INT,
+           STUDENT_ID INT,
+           FOREIGN KEY(CLASS_ID) REFERENCES CLASSES(ID),
+           FOREIGN KEY(STUDENT_ID) REFERENCES STUDENTS(ID)
+       );
+
+ROOMS (
+           ID INT PRIMARY KEY,
+           CAPACITY INT
+       );
+
+PERIODS (
+               ID INT PRIMARY KEY,
+               START_TIME TEXT,
+               DURATION INT
+           );
+
+CLASSES (
+           ID INT PRIMARY KEY,
+           SUBJECT_ID INT,
+           PERIOD_ID INT,
+           TEACHER_ID INT,
+           ROOM_ID INT,
+           FOREIGN KEY(SUBJECT_ID) REFERENCES SUBJECTS(ID),
+           FOREIGN KEY(PERIOD_ID) REFERENCES PERIODS(ID),
+           FOREIGN KEY(TEACHER_ID) REFERENCES TEACHERS(ID),
+           FOREIGN KEY(ROOM_ID) REFERENCES ROOMS(ID)
+       );
