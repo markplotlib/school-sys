@@ -34,15 +34,43 @@ for tbl in tables:
     y = cur.execute('SELECT COUNT(*) FROM {}'.format(tbl[0]))
     print(y.fetchone()[0])
 
-# 3 disparate tables
-print('demo: UNION')
+# UNION
 z = cur.execute('''
-          SELECT * FROM DRAMACLUB 
-    UNION SELECT * FROM CHESSCLUB 
-    UNION SELECT * FROM TRACKFIELD 
-    ORDER BY FIRST_NAME ASC LIMIT 3''')
+          SELECT LAST_NAME, GRADE FROM DRAMACLUB 
+    UNION SELECT LAST_NAME, GRADE FROM CHESSCLUB 
+    UNION SELECT LAST_NAME, GRADE FROM HIKECLUB 
+    ORDER BY LAST_NAME ASC LIMIT 3''')
 print(z.fetchall())
-# result: it happens that one from each grade make the top 3 (one-in-six chance)
+
+# INTERSECT
+a = cur.execute('''
+          SELECT FIRST_NAME FROM DRAMACLUB
+    INTERSECT SELECT FIRST_NAME FROM CHESSCLUB''')
+drama_chess = a.fetchall()
+print('In drama and chess clubs:', drama_chess[0][0], ',', drama_chess[1][0])
+
+b = cur.execute('''
+          SELECT FIRST_NAME FROM DRAMACLUB
+    INTERSECT SELECT FIRST_NAME FROM CHESSCLUB
+    INTERSECT SELECT FIRST_NAME FROM HIKECLUB
+    ''')
+drama_chess_hike = b.fetchall()
+print('In all 3 clubs:', drama_chess_hike[0][0])
+
+# UNION ALL vs UNION
+cte = '''WITH all_clubs AS (
+            SELECT FIRST_NAME FROM CHESSCLUB
+            UNION {} SELECT FIRST_NAME FROM DRAMACLUB 
+            UNION {} SELECT FIRST_NAME FROM HIKECLUB
+    )  SELECT COUNT(*) FROM all_clubs
+    '''
+c = cur.execute(cte.format('ALL', 'ALL'))
+ct_all = c.fetchone()
+print('total size of 3 clubs:', ct_all[0])
+
+d = cur.execute(cte.format('', ''))
+ct_no_dupes = d.fetchone()
+print('total # of students in 3 clubs:', ct_no_dupes[0])
 
 con.commit()
 con.close()
