@@ -47,7 +47,7 @@ a = cur.execute('''
           SELECT FIRST_NAME FROM DRAMACLUB
     INTERSECT SELECT FIRST_NAME FROM CHESSCLUB''')
 drama_chess = a.fetchall()
-print('In drama and chess clubs:', drama_chess[0][0], ',', drama_chess[1][0])
+print('\nIn drama and chess clubs:', drama_chess[0][0], ',', drama_chess[1][0])
 
 b = cur.execute('''
           SELECT FIRST_NAME FROM DRAMACLUB
@@ -57,6 +57,25 @@ b = cur.execute('''
 drama_chess_hike = b.fetchall()
 print('In all 3 clubs:', drama_chess_hike[0][0])
 
+
+# set differences
+e = cur.execute('''
+    SELECT FIRST_NAME FROM DRAMACLUB
+    EXCEPT
+    SELECT FIRST_NAME FROM CHESSCLUB
+    ''')
+drama_not_chess = e.fetchall()
+print('in drama but not in chess:', drama_not_chess)
+
+f = cur.execute('''
+    SELECT FIRST_NAME FROM CHESSCLUB
+    EXCEPT
+    SELECT FIRST_NAME FROM DRAMACLUB
+    ''')
+chess_not_drama = f.fetchall()
+print('in chess but not in drama:', chess_not_drama)
+
+
 # UNION ALL vs UNION
 cte = '''WITH all_clubs AS (
             SELECT FIRST_NAME FROM CHESSCLUB
@@ -64,10 +83,12 @@ cte = '''WITH all_clubs AS (
             UNION {} SELECT FIRST_NAME FROM HIKECLUB
     )  SELECT COUNT(*) FROM all_clubs
     '''
+# cumulative sizes of clubs (allowing double counting)
 c = cur.execute(cte.format('ALL', 'ALL'))
 ct_all = c.fetchone()
-print('total size of 3 clubs:', ct_all[0])
+print('\ntotal size of 3 clubs:', ct_all[0])
 
+# sum of students in clubs (no duplicates) 
 d = cur.execute(cte.format('', ''))
 ct_no_dupes = d.fetchone()
 print('total # of students in 3 clubs:', ct_no_dupes[0])
