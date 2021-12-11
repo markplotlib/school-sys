@@ -3,8 +3,8 @@ import sqlite3
 import os
 
 # filenames
-dbfile = 'set-ops.db'
-sql_filename = 'honor-roll.sql'
+dbfile = 'student-clubs.db'
+sql_filename = 'student-clubs.sql'
 
 if os.path.exists(dbfile): # overwrite only
     os.remove(dbfile)
@@ -34,7 +34,15 @@ for tbl in tables:
     y = cur.execute('SELECT COUNT(*) FROM {}'.format(tbl[0]))
     print(y.fetchone()[0])
 
-
+# 3 disparate tables
+print('demo: UNION')
+z = cur.execute('''
+          SELECT * FROM DRAMACLUB 
+    UNION SELECT * FROM CHESSCLUB 
+    UNION SELECT * FROM TRACKFIELD 
+    ORDER BY FIRST_NAME ASC LIMIT 3''')
+print(z.fetchall())
+# result: it happens that one from each grade make the top 3 (one-in-six chance)
 
 con.commit()
 con.close()
