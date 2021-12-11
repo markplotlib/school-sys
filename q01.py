@@ -9,25 +9,27 @@ cur = con.cursor()
 
 # Who are the busiest teachers?
 q = '''
-WITH busy AS
-(
-    SELECT  COUNT(*) AS load
-            , t.ID || ': ' || t.LAST_NAME || ', ' || t.FIRST_NAME AS name
+WITH class_teachers AS
+    (SELECT  t.*
     FROM    TEACHERS AS t
     JOIN    CLASSES AS c
-        ON  t.ID = c.TEACHER_ID
-    GROUP BY t.ID
-)
-SELECT name FROM busy
-WHERE load = (
-    SELECT MAX(load) FROM busy
-)
+        ON  t.ID = c.TEACHER_ID)
+, course_load AS 
+    (SELECT *, COUNT(*) AS ct
+    FROM    class_teachers
+    GROUP BY ID)
+SELECT * FROM course_load
+WHERE ct = (SELECT MAX(ct) FROM course_load)
 '''
 ans = cur.execute(q).fetchall()
 print('count, query:', len(ans))
-print(ans, '\n\n')
+i = 0
+while i < 5:
+    print(ans[i])
+    i += 1
 
-qcheck = '''    -- solution from Treehouse teacher
+# Treehouse solution 
+qcheck = '''
 WITH CLASSES_TEACHERS AS
   (SELECT *
    FROM TEACHERS
@@ -36,11 +38,14 @@ SELECT TEACHER_ID, LAST_NAME, FIRST_NAME,
        COUNT(PERIOD_ID) AS NUM_PERIODS
 FROM CLASSES_TEACHERS
 GROUP BY TEACHER_ID
-HAVING NUM_PERIODS = 7;
+HAVING NUM_PERIODS = 7
 '''
 result = cur.execute(qcheck).fetchall()
-print('count, answer:', len(result))
-print(result)
+print('\ncount, answer:', len(result))
+i = 0
+while i < 5:
+    print(result[i])
+    i += 1
 
 con.commit()
 con.close()

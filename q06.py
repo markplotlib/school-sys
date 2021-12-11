@@ -24,7 +24,8 @@ LIMIT 3
 '''
 print(cur.execute(q).fetchall())
 
-qcheck = '''    -- solution from Treehouse teacher
+# Treehouse solution 
+qcheck = '''
 WITH free_teachers AS
   (SELECT TEACHERS.ID
    FROM TEACHERS
