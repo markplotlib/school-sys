@@ -37,8 +37,24 @@ for res in result:
 
 # Treehouse solution 
 qcheck = '''
+WITH PERIOD_CLASS_SUBJECT_TEACHER AS
+  (SELECT *
+   FROM PERIODS
+   LEFT OUTER JOIN CLASSES ON PERIOD_ID = PERIODS.ID
+   LEFT OUTER JOIN SUBJECTS ON SUBJECT_ID = SUBJECTS.ID
+   LEFT OUTER JOIN TEACHERS ON TEACHER_ID = TEACHERS.ID
+   WHERE FIRST_NAME = "Janis"
+     AND LAST_NAME = "Ambrose" )
+SELECT PERIODS.ID AS "Period No.",
+       ROOM_ID,
+       NAME AS "Subjects_Janis_Teaches"
+FROM PERIODS
+LEFT OUTER JOIN PERIOD_CLASS_SUBJECT_TEACHER ON PERIODS.ID = PERIOD_ID;
 '''
-# print(cur.execute(qcheck).fetchall())
+answer = cur.execute(qcheck).fetchall()
+print()
+for ans in answer:
+    print(ans)
 
 con.commit()
 con.close()
