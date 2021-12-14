@@ -11,8 +11,9 @@ cur = con.cursor()
 # (i.e., which teacher teaches the most students)?
 q = '''
 WITH mix AS (
-    SELECT      c.TEACHER_ID
+    SELECT      COUNT(c.TEACHER_ID) AS ct
                 , t.FIRST_NAME || ' ' || t.LAST_NAME AS "teacher"
+                , subj.GRADE AS subject_grade
     FROM        CLASSES AS c
     JOIN        SUBJECTS AS subj
         ON      c.SUBJECT_ID = subj.ID
@@ -22,14 +23,15 @@ WITH mix AS (
         ON      sched.CLASS_ID = c.ID
     JOIN        STUDENTS AS stud
         ON      sched.STUDENT_ID = stud.ID    
+    WHERE       subject_grade IS NULL
     GROUP BY    TEACHER_ID
+--    ORDER BY    subject_grade NULLS FIRST, ct DESC
 )
-SELECT  MAX(TEACHER_ID)
-        , teacher
+SELECT  MAX(ct), teacher, subject_grade
 FROM    mix
 '''
 result = cur.execute(q).fetchall()
-print('{} teaches {} students.'.format(result[0][1], result[0][0]))
+print('{} teaches {} students \n(elective classes: grade = {}).'.format(result[0][1], result[0][0], result[0][2]))
 
 # Treehouse solution 
 qcheck = '''
