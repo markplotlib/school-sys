@@ -14,8 +14,8 @@ WITH subj_class_sched_stud AS (
     SELECT  
             subj.ID     AS subj_id
             , subj.NAME AS subj_name
-            -- , COUNT(subj.NAME) AS "STUDENT_COUNT"
-            , stud.LAST_NAME AS "kid"
+            , COUNT(subj.NAME) AS "STUDENT_COUNT"
+--          , stud.LAST_NAME AS "kid"
     FROM    SUBJECTS AS subj
     JOIN    CLASSES AS c
         ON  c.SUBJECT_ID = subj.ID
@@ -23,15 +23,13 @@ WITH subj_class_sched_stud AS (
         ON  SCHEDULE.CLASS_ID = c.ID
     JOIN    STUDENTS AS stud
         ON  SCHEDULE.STUDENT_ID = stud.ID
+    GROUP BY    subj_id
 )
-SELECT      COUNT(subj_id) AS ct
+SELECT      MIN(STUDENT_COUNT) AS ct
             , subj_name
 FROM        subj_class_sched_stud
-GROUP BY    subj_id
-ORDER BY    ct ASC
-LIMIT 1
 '''
-result = cur.execute(q).fetchall()
+result = cur.execute(q).fetchone()
 print(result)
 
 # Treehouse solution 
@@ -47,7 +45,7 @@ SELECT NAME,
        MIN("STUDENT_COUNT")
 FROM CTE;
 '''
-answer = cur.execute(qcheck).fetchall()
+answer = cur.execute(qcheck).fetchone()
 print()
 for ans in answer:
     print(ans)
