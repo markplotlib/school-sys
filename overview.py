@@ -55,5 +55,28 @@ print('\n', cur.execute(
     '''
 ).fetchone()[0])
 
+print('\nexample of date and time:')
+
+# DATE(), TIME()
+print(' basic date & time\n', cur.execute(
+    'SELECT  DATE("now"), TIME("now")'
+).fetchone())
+
+print(' datetime (UTC default)\n', cur.execute(
+    'SELECT  DATETIME("now")'
+).fetchone())
+
+print(' 2-week window\n', cur.execute(
+    'SELECT  DATE("now", "-7 days"), DATE("now", "+7 days")'
+).fetchone())
+
+print(' +/- months\n', cur.execute(
+    'SELECT  DATE("now", "-3 months"), DATE("now", "+3 months")'
+).fetchone())
+
+print(' UTC-08 (PST)\n', cur.execute(
+    'SELECT  DATETIME("now", "-8 hours")'
+).fetchone())
+
 con.commit()
 con.close()
