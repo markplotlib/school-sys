@@ -21,5 +21,19 @@ for tbl in tables:
     y = cur.execute('SELECT COUNT(*) FROM {}'.format(tbl[0]))
     print(y.fetchone()[0])
 
+print('\nexample of COUNT DISTINCT:')
+print('\n', cur.execute(
+    'SELECT COUNT(*) FROM SUBJECTS'
+).fetchone()[0], 'entries in Subjects table')
+
+print('\n', cur.execute(
+    'SELECT COUNT(GRADE) FROM SUBJECTS'
+).fetchone()[0], 'are not null')
+
+print('\n', cur.execute(
+    'SELECT COUNT(DISTINCT GRADE) FROM SUBJECTS'
+).fetchone()[0], 'are distinct (excluding null)')
+
+
 con.commit()
 con.close()
