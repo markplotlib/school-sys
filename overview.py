@@ -34,6 +34,26 @@ print('\n', cur.execute(
     'SELECT COUNT(DISTINCT GRADE) FROM SUBJECTS'
 ).fetchone()[0], 'are distinct (excluding null)')
 
+print('\nexample of string functions:')
+
+# REPLACE(col, x, y)
+print('\n', cur.execute(
+    '''
+    SELECT  REPLACE(t.FIRST_NAME, 'Tomas', 'Tom')
+            , REPLACE(t.LAST_NAME , 'Smith', 'Hanks')
+    FROM        TEACHERS AS t
+    WHERE       t.ID = 395
+    '''
+).fetchone())
+
+# SUBSTR(col, start, stop)
+print('\n', cur.execute(
+    '''
+    SELECT  SUBSTR(t.FIRST_NAME, 1, 4)
+    FROM    TEACHERS AS t
+    LIMIT 1
+    '''
+).fetchone()[0])
 
 con.commit()
 con.close()
