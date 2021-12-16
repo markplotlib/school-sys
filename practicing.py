@@ -64,5 +64,13 @@ print(' UTC-08 (PST)\n', cur.execute(
     'SELECT  DATETIME("now", "-8 hours")'
 ).fetchone())
 
+# STRFTIME()
+print(' STRFTIME()\n', cur.execute(
+    '''WITH cte AS
+    (SELECT  DATETIME("now", "-8 hours") AS PST)
+    SELECT PST, STRFTIME("%m-%d-%Y", PST) FROM cte
+    '''
+).fetchone())
+
 con.commit()
 con.close()
